@@ -69,7 +69,7 @@ describe('chai-rx', () => {
           expect(output).to.emit([
             onNext(250, { 'foo': 'bar' })
           ]);
-        })
+        });
       });
 
       describe('`should` usage', () => {
@@ -79,7 +79,7 @@ describe('chai-rx', () => {
           output.should.emit([
             onNext(250, { 'foo': 'bar' })
           ]);
-        })
+        });
       });
 
       describe('Language chains', () => {
@@ -89,7 +89,7 @@ describe('chai-rx', () => {
           expect(output).to.not.emit([
             onNext(300, { 'foo': 'bar' })
           ]);
-        })
+        });
       });
 
     });

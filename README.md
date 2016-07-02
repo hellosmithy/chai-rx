@@ -34,6 +34,38 @@ expect(output).to.emit([
 
 ```
 
+## Usage
+
+### `expect` / `should` syntax
+
+```javascript
+const const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }));
+const output = scheduler.startScheduler(() => xs);
+
+// expect
+expect(output).to.emit([
+  onNext(250, { 'foo': 'bar' })
+]);
+
+// should
+output.should.emit([
+  onNext(250, { 'foo': 'bar' })
+]);
+```
+
+### Language chains
+
+```javascript
+const const xs = scheduler.createHotObservable(onNext(250));
+const output = scheduler.startScheduler(() => xs);
+
+// with `not`
+expect(output).to.not.emit([
+  onNext(300)
+]);
+
+```
+
 ## Installation
 
 ```shell

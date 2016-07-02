@@ -1,6 +1,6 @@
 {
   "name": "chai-rx",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Extends Chai with assertions about RxJS observable streams.",
   "main": "lib/chai-rx.js",
   "scripts": {

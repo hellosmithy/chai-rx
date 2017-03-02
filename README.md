@@ -39,17 +39,19 @@ expect(output).to.emit([
 ### `expect` / `should` syntax
 
 ```javascript
-const const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }));
+const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }), onError(300, new Error('An error')));
 const output = scheduler.startScheduler(() => xs);
 
 // expect
 expect(output).to.emit([
-  onNext(250, { 'foo': 'bar' })
+  onNext(250, { 'foo': 'bar' }),
+  onError(300, ({error}) => error.message === 'An error')
 ]);
 
 // should
 output.should.emit([
-  onNext(250, { 'foo': 'bar' })
+  onNext(250, { 'foo': 'bar' }),
+  onError(300, ({error}) => error.message === 'An error')
 ]);
 ```
 

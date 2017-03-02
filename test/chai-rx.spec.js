@@ -1,5 +1,5 @@
 import Rx from 'rx';
-const { onNext, onCompleted } = Rx.ReactiveTest;
+const { onNext, onError, onCompleted } = Rx.ReactiveTest;
 
 describe('chai-rx', () => {
   describe('emit', () => {
@@ -64,20 +64,22 @@ describe('chai-rx', () => {
 
       describe('`expect` usage', () => {
         it('should pass with `expect`', () => {
-          const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }));
+          const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }), onError(300, new Error('An error')));
           const output = scheduler.startScheduler(() => xs);
           expect(output).to.emit([
-            onNext(250, { 'foo': 'bar' })
+            onNext(250, { 'foo': 'bar' }),
+            onError(300, ({error}) => error.message === 'An error')
           ]);
         });
       });
 
       describe('`should` usage', () => {
         it('should pass with `should`', () => {
-          const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }));
+          const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }), onError(300, new Error('An error')));
           const output = scheduler.startScheduler(() => xs);
           output.should.emit([
-            onNext(250, { 'foo': 'bar' })
+            onNext(250, { 'foo': 'bar' }),
+            onError(300, ({error}) => error.message === 'An error')
           ]);
         });
       });

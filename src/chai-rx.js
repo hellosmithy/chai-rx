@@ -3,7 +3,7 @@ import Rx from 'rx';
 function createMessage(expected, actual) {
   return `Expected: [${JSON.stringify(expected)}]\r\nActual: [${JSON.stringify(actual)}]`;
 }
-
+// see https://github.com/Reactive-Extensions/RxJS/blob/master/tests/helpers/reactiveassert.js
 export default function chaiRx(chai, _utils) {
   chai.Assertion.addMethod('emit', function emitAssertion(expected) {
     const obj = this._obj;
@@ -18,7 +18,14 @@ export default function chaiRx(chai, _utils) {
     }
 
     for (let i = 0, len = expected.length; i < len; i++) {
-      isOk = comparer(expected[i], actual[i]);
+      var e = expected[i], a = actual[i];
+      // Allow for predicates
+      if (e.value && typeof e.value.predicate === 'function') {
+        isOk = e.time === a.time && e.value.predicate(a.value);
+      } else {
+        isOk = comparer(e, a);
+      }
+
       if (!isOk) {
         break;
       }

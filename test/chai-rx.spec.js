@@ -1,3 +1,4 @@
+import chai from 'chai';
 import Rx from 'rx';
 const { onNext, onError, onCompleted } = Rx.ReactiveTest;
 
@@ -7,11 +8,11 @@ describe('chai-rx', () => {
     describe('`expect` syntax', () => {
       it('should decorate `expect().to`', () => {
         const emit = expect().to.emit;
-        expect(emit).to.be.a.function;
+        expect(emit).to.be.a('function');
       });
       it('should decorate `expect().to.not`', () => {
         const emit = expect().to.not.emit;
-        expect(emit).to.be.a.function;
+        expect(emit).to.be.a('function');
       });
       it('should negate matches when prefixed with `not`', () => {
         const scheduler = new Rx.TestScheduler();
@@ -27,11 +28,11 @@ describe('chai-rx', () => {
     describe('`should` syntax', () => {
       it('should decorate `should`', () => {
         const emit = {}.should.emit;
-        expect(emit).to.be.a.function;
+        expect(emit).to.be.a('function');
       });
       it('should decorate `should.not`', () => {
         const emit = {}.should.not.emit;
-        expect(emit).to.be.a.function;
+        expect(emit).to.be.a('function');
       });
     });
 

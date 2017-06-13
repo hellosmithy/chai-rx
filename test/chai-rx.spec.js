@@ -6,7 +6,6 @@ describe('chai-rx', () => {
   describe('emit', () => {
 
     describe('`expect` syntax', () => {
-      console.log('expect');
       it('should decorate `expect().to`', () => {
         const emit = expect().to.emit;
         expect(emit).to.be.a('function');

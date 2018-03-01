@@ -1,7 +1,7 @@
-import Rx from 'rx';
+const _ = require('lodash');
 
 function createMessage(expected, actual) {
-  return `Expected: [${JSON.stringify(expected)}]\r\nActual: [${JSON.stringify(actual)}]`;
+  return `Expected: \r\n${JSON.stringify(expected)}\r\nActual: \r\n${JSON.stringify(actual)}`;
 }
 // see https://github.com/Reactive-Extensions/RxJS/blob/master/tests/helpers/reactiveassert.js
 export default function chaiRx(chai, _utils) {
@@ -9,7 +9,6 @@ export default function chaiRx(chai, _utils) {
     const obj = this._obj;
     const actual = obj.messages;
 
-    const comparer = Rx.internals.isEqual;
     let isOk = true;
 
     if (expected.length !== actual.length) {
@@ -23,7 +22,7 @@ export default function chaiRx(chai, _utils) {
       if (e.value && typeof e.value.predicate === 'function') {
         isOk = e.time === a.time && e.value.predicate(a.value);
       } else {
-        isOk = comparer(e, a);
+        isOk = _.isEqual(e, a);
       }
 
       if (!isOk) {

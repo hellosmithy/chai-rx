@@ -1,8 +1,8 @@
 {
-  "name": "chai-rx",
+  "name": "chai-rxjs",
   "version": "0.0.3",
-  "description": "Extends Chai with assertions about RxJS observable streams.",
-  "main": "lib/chai-rx.js",
+  "description": "Extends Chai with assertions about RxJS5+ observable streams.",
+  "main": "lib/chai-rxjs.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src -d lib",
     "test": "mocha test/chai-rx.spec.js"
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/hellosmithy/chai-rx#readme",
   "peerDependencies": {
-    "rx": ">= 4.0.7 < 5",
+    "rxjs": ">= 5",
     "chai": ">= 2.1.2 < 4.2"
   },
   "devDependencies": {
@@ -39,6 +39,9 @@
     "babel-register": "^6.9.0",
     "chai": "^4.0.2",
     "mocha": "^2.5.3",
-    "rx": "^4.1.0"
+    "rxjs": "^5.5.6"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5"
   }
 }

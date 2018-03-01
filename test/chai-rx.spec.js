@@ -1,8 +1,11 @@
 import chai from 'chai';
-import Rx from 'rx';
-const { onNext, onError, onCompleted } = Rx.ReactiveTest;
+import { TestScheduler, Notification, Observable } from 'rxjs';
 
 describe('chai-rx', () => {
+  const message = (frame, notification) => {
+    return { frame: frame, notification: notification }
+  }
+
   describe('emit', () => {
 
     describe('`expect` syntax', () => {
@@ -15,12 +18,12 @@ describe('chai-rx', () => {
         expect(emit).to.be.a('function');
       });
       it('should negate matches when prefixed with `not`', () => {
-        const scheduler = new Rx.TestScheduler();
-        const xs = scheduler.createHotObservable(onNext(150));
-        const output = scheduler.startScheduler(() => xs);
-
-        expect(output).to.not.emit([
-          onNext(150) // fired before subscription so doesn't emit
+        const scheduler = new TestScheduler();
+        const source = scheduler.createHotObservable("---------------");
+        scheduler.flush();
+        expect(source).to.not.emit([
+          // fired before subscription so doesn't emit
+          message(150, undefined)
         ]);
       })
     });
@@ -39,58 +42,49 @@ describe('chai-rx', () => {
     describe('README examples', () => {
       let scheduler;
       beforeEach(() => {
-        scheduler = new Rx.TestScheduler();
+        scheduler = new TestScheduler();
       });
       it('should compare a TestScheduler observer object to a given array of messages', () => {
         // Create hot observable which will start firing
-        const xs = scheduler.createHotObservable(
-          onNext(150, 1),
-          onNext(210, 2),
-          onNext(220, 3),
-          onCompleted(230)
-        );
-        // Note we'll start at 200 for subscribe, hence missing the 150 mark
-        const output = scheduler.startScheduler(() => xs.map(x => x * x), {
-          created: 100,
-          subscribed: 200,
-          disposed: 300
-        });
+        const source = scheduler.createHotObservable("---------------1----^----------------2----------------------3|");
+        scheduler.flush()
 
-        expect(output).to.emit([
-          onNext(210, 4),
-          onNext(220, 9),
-          onCompleted(230)
+        expect(source).to.emit([
+          message(-50, Notification.createNext("1")),
+          message(170, Notification.createNext("2")),
+          message(400, Notification.createNext("3")),
+          message(410, Notification.createComplete())
         ]);
       });
 
       describe('`expect` usage', () => {
         it('should pass with `expect`', () => {
-          const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }), onError(300, new Error('An error')));
-          const output = scheduler.startScheduler(() => xs);
-          expect(output).to.emit([
-            onNext(250, { 'foo': 'bar' }),
-            onError(300, ({error}) => error.message === 'An error')
+          const source = scheduler.createHotObservable("-------------------------f-----#", { 'f': 'bar' }, new Error('An error'));
+          scheduler.flush();
+          expect(source).to.emit([
+            message(250, Notification.createNext('bar')),
+            message(310, Notification.createError(new Error('An error')))
           ]);
         });
       });
 
       describe('`should` usage', () => {
         it('should pass with `should`', () => {
-          const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }), onError(300, new Error('An error')));
-          const output = scheduler.startScheduler(() => xs);
-          output.should.emit([
-            onNext(250, { 'foo': 'bar' }),
-            onError(300, ({error}) => error.message === 'An error')
+          const source = scheduler.createHotObservable("-------------------------f-----#", { 'f': 'bar' }, new Error('An error'));
+          scheduler.flush();
+          source.should.emit([
+            message(250, Notification.createNext('bar')),
+            message(310, Notification.createError(new Error('An error')))
           ]);
         });
       });
 
       describe('Language chains', () => {
         it('should pass with `not` chain', () => {
-          const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }));
-          const output = scheduler.startScheduler(() => xs);
-          expect(output).to.not.emit([
-            onNext(300, { 'foo': 'bar' })
+          const source = scheduler.createHotObservable("-------------------------f", { 'f': 'bar' });
+          scheduler.flush();
+          expect(source).to.not.emit([
+            message(310, Notification.createNext('bar'))
           ]);
         });
       });

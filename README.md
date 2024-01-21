@@ -1,11 +1,14 @@
+> [!WARNING]
+> This package relates to the `rx` package at v4. It will not work with the newer `rxjs` package which refers to Rx v5 and above.
+
 # Chai Assertions for RxJS Observables
 
 **ChaiRx** extends [Chai](http://chaijs.com/) with a simple utility method `emit` for testing emits from an RxJS Observable stream using the [`Rx.TestScheduler`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/testing/testscheduler.md).
 
 ```javascript
-import Rx from 'rx';
-import chai from 'chai';
-import chaiRx from 'chai-rx';
+import Rx from "rx";
+import chai from "chai";
+import chaiRx from "chai-rx";
 
 chai.use(chaiRx);
 
@@ -20,18 +23,13 @@ const xs = scheduler.createHotObservable(
 );
 
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
-const output = scheduler.startScheduler(() => xs.map(x => x * x), {
+const output = scheduler.startScheduler(() => xs.map((x) => x * x), {
   created: 100,
   subscribed: 200,
-  disposed: 300
+  disposed: 300,
 });
 
-expect(output).to.emit([
-  onNext(210, 4),
-  onNext(220, 9),
-  onCompleted(230)
-]);
-
+expect(output).to.emit([onNext(210, 4), onNext(220, 9), onCompleted(230)]);
 ```
 
 ## Usage
@@ -39,19 +37,22 @@ expect(output).to.emit([
 ### `expect` / `should` syntax
 
 ```javascript
-const xs = scheduler.createHotObservable(onNext(250, { 'foo': 'bar' }), onError(300, new Error('An error')));
+const xs = scheduler.createHotObservable(
+  onNext(250, { foo: "bar" }),
+  onError(300, new Error("An error"))
+);
 const output = scheduler.startScheduler(() => xs);
 
 // expect
 expect(output).to.emit([
-  onNext(250, { 'foo': 'bar' }),
-  onError(300, ({error}) => error.message === 'An error')
+  onNext(250, { foo: "bar" }),
+  onError(300, ({ error }) => error.message === "An error"),
 ]);
 
 // should
 output.should.emit([
-  onNext(250, { 'foo': 'bar' }),
-  onError(300, ({error}) => error.message === 'An error')
+  onNext(250, { foo: "bar" }),
+  onError(300, ({ error }) => error.message === "An error"),
 ]);
 ```
 
@@ -77,8 +78,8 @@ npm install chai-rx
 ### ES6 Imports
 
 ```javascript
-import chai from 'chai';
-import chaiRx from 'chai-rx';
+import chai from "chai";
+import chaiRx from "chai-rx";
 
 chai.use(chaiRx);
 ```
@@ -86,8 +87,8 @@ chai.use(chaiRx);
 ### AMD
 
 ```javascript
-var chai = require('chai');
-var chaiRx = require('chai-rx');
+var chai = require("chai");
+var chaiRx = require("chai-rx");
 
 chai.use(chaiRx);
 ```
